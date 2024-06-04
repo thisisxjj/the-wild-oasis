@@ -19,7 +19,6 @@ const Heading = styled.h1`
       font-size: 2rem;
       font-weight: 500;
     `}
-  color: var(--color-brand-600);
 `
 
 export default Heading
