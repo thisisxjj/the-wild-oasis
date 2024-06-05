@@ -10,16 +10,21 @@ import Button from '../../ui/Button'
 import FileInput from '../../ui/FileInput'
 import Textarea from '../../ui/Textarea'
 
-import { createCabin } from '../../services/apiCabins'
+import { createEditCabin } from '../../services/apiCabins'
 
-const CreateCabinForm = () => {
+const CreateCabinForm = ({ cabinToEdit = {} }) => {
+  const { id: editId, ...editValues } = cabinToEdit
+  const isEditSession = Boolean(editId)
+
   const queryClient = useQueryClient()
-  const { handleSubmit, getValues, register, formState, reset } = useForm()
+  const { handleSubmit, getValues, register, formState, reset } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  })
 
   const { errors } = formState
 
-  const { mutate, isPending: isCreating } = useMutation({
-    mutationFn: createCabin,
+  const { mutate: addCabin, isPending: isCreating } = useMutation({
+    mutationFn: createEditCabin,
     onSuccess: () => {
       toast.success('Cabin successfully created!')
       queryClient.invalidateQueries({
@@ -30,21 +35,50 @@ const CreateCabinForm = () => {
     onError: (error) => toast.error(error.message),
   })
 
+  const { mutate: editCabin, isPending: isEditing } = useMutation({
+    mutationFn: ({ newCabin, id }) => createEditCabin(newCabin, id),
+    onSuccess: () => {
+      toast.success('Cabin successfully edited!')
+      queryClient.invalidateQueries({
+        queryKey: ['cabins'],
+      })
+      reset()
+    },
+    onError: (error) => toast.error(error.message),
+  })
+
   const onSubmit = (data) => {
-    mutate({ ...data, image: data.image[0] })
+    const image = typeof data.image === 'string' ? data.image : data.image[0]
+    if (isEditSession) {
+      editCabin(
+        { newCabin: { ...data, image }, id: editId },
+        {
+          onSuccess: () => {
+            reset()
+          },
+        }
+      )
+    } else {
+      addCabin(
+        { ...data, image },
+        {
+          onSuccess: () => {
+            reset()
+          },
+        }
+      )
+    }
   }
 
-  const onError = (error) => {
-    console.log(error)
-  }
+  const isWorking = isCreating || isEditing
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
           id="name"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('name', {
             required: 'The field is required',
           })}
@@ -54,7 +88,7 @@ const CreateCabinForm = () => {
         <Input
           type="number"
           id="maxCapacity"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('maxCapacity', {
             required: 'The field is required',
             min: {
@@ -69,7 +103,7 @@ const CreateCabinForm = () => {
         <Input
           type="number"
           id="regularPrice"
-          disabled={isCreating}
+          disabled={isWorking}
           {...register('regularPrice', {
             required: 'The field is required',
             min: {
@@ -84,7 +118,7 @@ const CreateCabinForm = () => {
         <Input
           type="number"
           id="discount"
-          disabled={isCreating}
+          disabled={isWorking}
           defaultValue={0}
           {...register('discount', {
             required: 'The field is required',
@@ -105,7 +139,7 @@ const CreateCabinForm = () => {
         <Textarea
           type="number"
           id="description"
-          disabled={isCreating}
+          disabled={isWorking}
           defaultValue=""
           {...register('description', {
             required: 'The field is required',
@@ -118,7 +152,9 @@ const CreateCabinForm = () => {
           id="image"
           accept="image/*"
           {...register('image', {
-            required: 'The field is required',
+            validate: (value) => {
+              return !!value || 'The field is required'
+            },
           })}
         />
       </FormRow>
@@ -128,7 +164,9 @@ const CreateCabinForm = () => {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Edit cabin</Button>
+        <Button disabled={isWorking}>
+          {isEditSession ? 'Edit cabin' : 'Create new cabin'}
+        </Button>
       </FormRow>
     </Form>
   )
