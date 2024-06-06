@@ -1,8 +1,14 @@
 import { cloneElement } from 'react'
 import { useState } from 'react'
 import { createContext, useContext } from 'react'
+import { createPortal } from 'react-dom'
 import { HiXMark } from 'react-icons/hi2'
 import styled from 'styled-components'
+
+const ModalContainer = styled.div`
+  position: relative;
+  z-index: 1000;
+`
 
 const StyledModal = styled.div`
   position: fixed;
@@ -24,7 +30,6 @@ const Overlay = styled.div`
   height: 100vh;
   background-color: var(--backdrop-color);
   backdrop-filter: blur(4px);
-  z-index: 1000;
   transition: all 0.5s;
 `
 
@@ -75,15 +80,18 @@ function Window({ children, name }) {
 
   if (name !== openName) return null
 
-  return (
-    <Overlay>
+  return createPortal(
+    <ModalContainer>
+      <Overlay onClick={() => onClose()}></Overlay>
+
       <StyledModal>
         <Button onClick={onClose}>
           <HiXMark />
         </Button>
         <div>{cloneElement(children, { onCloseModal: onClose })}</div>
       </StyledModal>
-    </Overlay>
+    </ModalContainer>,
+    document.body
   )
 }
 
