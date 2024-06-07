@@ -1,9 +1,15 @@
-import { useSearchParams } from 'react-router-dom'
 import Select from './Select'
+import { useOptionsIncludeSearch } from '../hooks/useOptionsIncludeSearch'
 
 function SortBy({ options }) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const sortBy = searchParams.get('sortBy') || ''
+  const {
+    searchValue: sortBy,
+    searchParams,
+    setSearchParams,
+  } = useOptionsIncludeSearch({
+    searchKey: 'sortBy',
+    options,
+  })
 
   function handleChange(e) {
     searchParams.set('sortBy', e.target.value)

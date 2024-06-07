@@ -1,5 +1,5 @@
-import { useSearchParams } from 'react-router-dom'
 import styled, { css } from 'styled-components'
+import { useOptionsIncludeSearch } from '../hooks/useOptionsIncludeSearch'
 
 const StyledFilter = styled.div`
   border: 1px solid var(--color-grey-100);
@@ -35,15 +35,18 @@ const FilterButton = styled.button`
 `
 
 function Filter({ field, options }) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  let currentFilter = searchParams.get(field)
-
-  if (!options.map(({ value }) => value).includes(currentFilter)) {
-    currentFilter = options[0].value
-  }
+  const {
+    searchValue: currentFilter,
+    searchParams,
+    setSearchParams,
+  } = useOptionsIncludeSearch({
+    searchKey: field,
+    options,
+  })
 
   const handleClick = (value) => {
     searchParams.set(field, value)
+    searchParams.set('page', 1)
     setSearchParams(searchParams)
   }
 
