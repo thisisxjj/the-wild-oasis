@@ -11,7 +11,6 @@ export const useOutsideClick = (handler, exclude, isCapture = true) => {
         !ref.current.contains(event.target) &&
         (!exclude || exclude?.(event))
       ) {
-        console.log('Click Outside')
         handler()
       }
     }

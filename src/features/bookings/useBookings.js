@@ -15,11 +15,13 @@ export const useBookings = () => {
     options: sortByOptions,
   })
 
+  // FILTER
   const filter =
     !filterValue || filterValue === 'all'
       ? null
       : { field: 'status', value: filterValue, method: 'eq' }
 
+  // SORT
   const [field, direction] = sortByValue.split('-')
   const sortBy = { field, direction }
 

@@ -28,13 +28,12 @@ export async function createEditCabin(newCabin, id) {
       .upload(imageName, newCabin.image)
 
     if (storageError) {
-      console.log('Cabin image upload failed', storageError)
+      console.error('Cabin image upload failed', storageError)
       throw new Error(
         'Cabin image could not be uploaded and the cabin was not created'
       )
     }
 
-    // console.log('Cabin image was uploaded', data)
     newCabin.image = `${supabaseUrl}/storage/v1/object/public/cabin-images/${data.path}`
   }
 
@@ -49,7 +48,7 @@ export async function createEditCabin(newCabin, id) {
   const { data, error } = await query.select().single()
 
   if (error) {
-    console.log('Cabin could not be created', error)
+    console.error('Cabin could not be created', error)
 
     throw new Error('Cabin could not be created')
   }
@@ -64,7 +63,7 @@ export async function deleteCabin(cabinId) {
     .eq('id', cabinId)
 
   if (error) {
-    console.log('Cabin could not be deleted', error)
+    console.error('Cabin could not be deleted', error)
 
     throw new Error('Cabin could not be deleted')
   }
