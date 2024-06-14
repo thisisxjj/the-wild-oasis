@@ -11,6 +11,7 @@ import Settings from './pages/Settings'
 import Account from './pages/Account'
 import Login from './pages/Login'
 import AppLayout from './ui/AppLayout'
+import ProtectedLayout from './ui/ProtectedLayout'
 import PageNotFound from './pages/PageNotFound'
 import { Toaster } from 'react-hot-toast'
 import Booking from './pages/Booking'
@@ -35,7 +36,13 @@ function App() {
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectedLayout>
+                <AppLayout />
+              </ProtectedLayout>
+            }
+          >
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="bookings" element={<Bookings />} />
