@@ -28,3 +28,12 @@ export async function getCurrentUser() {
 
   return data?.user
 }
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.error('logout went something error: ', error)
+    throw new Error(error.message)
+  }
+}
