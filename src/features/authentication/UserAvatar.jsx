@@ -9,6 +9,7 @@ const StyledUserAvatar = styled.div`
   font-size: 1.4rem;
   color: var(--color-grey-600);
   cursor: pointer;
+  margin-right: 2rem;
 `
 
 const Avatar = styled.img`

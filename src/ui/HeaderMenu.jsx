@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import DarkModeToggle from './DarkModeToggle'
 import Logout from '../features/authentication/Logout'
 import UserAvatar from '../features/authentication/UserAvatar'
 
@@ -15,6 +16,9 @@ function HeaderMenu() {
     <StyledHeaderMenu>
       <li>
         <UserAvatar onClick={() => navigate('/account')} />
+      </li>
+      <li>
+        <DarkModeToggle />
       </li>
       <li>
         <Logout />
