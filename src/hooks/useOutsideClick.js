@@ -1,16 +1,12 @@
 import { useEffect } from 'react'
 import { useRef } from 'react'
 
-export const useOutsideClick = (handler, exclude, isCapture = true) => {
+export const useOutsideClick = (handler, isCapture = true) => {
   const ref = useRef(null)
 
   useEffect(() => {
     const handleClick = (event) => {
-      if (
-        ref.current &&
-        !ref.current.contains(event.target) &&
-        (!exclude || exclude?.(event))
-      ) {
+      if (ref.current && !ref.current.contains(event.target)) {
         handler()
       }
     }
@@ -20,7 +16,7 @@ export const useOutsideClick = (handler, exclude, isCapture = true) => {
     return () => {
       document.removeEventListener('click', handleClick, isCapture)
     }
-  }, [handler, isCapture, exclude])
+  }, [handler, isCapture])
 
   return ref
 }
