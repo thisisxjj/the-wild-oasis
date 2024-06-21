@@ -39,6 +39,8 @@ jobs:
       run: pnpm install
     - name: Build App
       run: pnpm build
+    - name: Debug Secrets
+      run: echo 'Host ${{ secrets.REMOTE_HOST }}'
     - name: Copy Dist File With SCP
       uses: appleboy/scp-action@v0.0.1
       with:
