@@ -52,3 +52,4 @@ jobs:
         port: 22
         source: 'dist/'
         target: ${{ secrets.REMOTE_TARGET_PATH }}
+        args: '-o StrictHostKeyChecking=no'
