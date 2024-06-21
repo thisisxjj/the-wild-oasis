@@ -7,14 +7,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   build:
     name: Build Vite Pack
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
     - name: Checkout
@@ -49,4 +45,3 @@ jobs:
         port: 22
         source: 'dist/'
         target: ${{ secrets.REMOTE_TARGET_PATH }}
-        
