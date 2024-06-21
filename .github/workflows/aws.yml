@@ -37,10 +37,10 @@ jobs:
       run: npm run build
     - name: Copy Dist File With SCP
       uses: appleboy/scp-action@v0.0.1
+      env:
+        HOST: ${{ secrets.REMOTE_HOST }}
+        USERNAME: ${{ secrets.REMOTE_USERNAME }}
+        KEY: ${{ secrets.SCP_SECRET }}
       with:
-        host: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.REMOTE_USERNAME }}
-        key: ${{ secrets.SCP_SECRET }}
-        port: 22
         source: 'dist/'
         target: ${{ secrets.REMOTE_TARGET_PATH }}
