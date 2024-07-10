@@ -8,7 +8,12 @@ import FormRowVertical from '../../ui/FormRowVertical'
 import { useLogin } from './useLogin'
 
 function LoginForm() {
-  const { handleSubmit, register, formState } = useForm()
+  const { handleSubmit, register, formState } = useForm({
+    defaultValues: {
+      email: 'test@gmail.com',
+      password: 'test12345',
+    },
+  })
 
   const { login, isPending } = useLogin()
 
